@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "docs-finder-api"
+version = "0.1.0"
+description = "Application for working with documents."
+authors = ["Stanis96 <vasilievstas96@yandex.ru>"]
+
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+fastapi = "^0.92.0"
+uvicorn = "^0.20.0"
+
+pydantic = "^1.10.5"
+
+python-dotenv = "^1.0.0"
+
+pytest = "^7.2.1"
+requests = "^2.28.2"
+
+motor = "^3.1.1"
+
+
+[tool.poetry.dev-dependencies]
+black = "23.1.0"
+
+isort = "^5.12.0"
+
+mypy = "^1.0.1"
+
+flake8 = "6.0.0"
+flake8-black = "0.3.6"
+flake8-builtins = "2.1.0"
+flake8-isort = "6.0.0"
+
+dotenv-linter = "^0.4.0"
+
+pre-commit = "^3.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+exclude = """
+    ('
+    |.idea/
+    |.venv/
+    |.vscode/
+    ')
+"""
+
+[tool.mypy]
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+python_version = 3.11
+warn_return_any = true
+warn_unused_configs = true
+exclude = [".venv/", ".tests/"]
