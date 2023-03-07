@@ -1,14 +1,24 @@
+import uvicorn as uvicorn
+
 from fastapi import FastAPI
+from motor.motor_asyncio import AsyncIOMotorClient
+
+from .config import settings
 
 
 app = FastAPI()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.on_event("startup")
+async def startup_db():
+    app.db_client = AsyncIOMotorClient(settings.MONGODB_URL)
+    app.mongodb = app.db_client[settings.DB_NAME]
 
 
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+@app.on_event("shutdown")
+async def shutdown_db():
+    app.db_client.close()
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
