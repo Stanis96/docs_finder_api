@@ -8,10 +8,10 @@ authors = ["Stanis96 <vasilievstas96@yandex.ru>"]
 [tool.poetry.dependencies]
 python = "3.11.1"
 
-fastapi = "^0.92.0"
-uvicorn = "^0.20.0"
+fastapi = "^0.95.0"
+uvicorn = "^0.21.1"
 
-pydantic = "^1.10.5"
+pydantic = "^1.10.7"
 
 python-dotenv = "^1.0.0"
 
@@ -28,7 +28,7 @@ black = "23.1.0"
 isort = "^5.12.0"
 
 mypy = "^1.1.1"
-pandas-stubs = "^1.5.3.230304"
+pandas-stubs = "^1.5.3.230321"
 motor-stubs = "^1.7.1"
 
 flake8 = "6.0.0"
@@ -38,7 +38,7 @@ flake8-isort = "6.0.0"
 
 dotenv-linter = "^0.4.0"
 
-pre-commit = "^3.1.0"
+pre-commit = "^3.2.1"
 
 
 [build-system]

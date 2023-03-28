@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     PROJECT_DESCRIPTION: Optional[str]
 
     MONGODB_URL: Optional[MongoDsn]
-    DB_NAME: Optional[str]
+    DB_NAME: str
     DB_COLLECTION: Optional[str]
 
     class Config:

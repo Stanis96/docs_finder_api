@@ -2,6 +2,8 @@ import asyncio
 import json
 import os
 
+from typing import Any
+
 import pandas as pd
 
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -9,15 +11,15 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from .config import settings
 
 
-async def import_data():
+async def import_data() -> Any:
     client = AsyncIOMotorClient(settings.MONGODB_URL)
     db = client[settings.DB_NAME]
     collection = db[settings.DB_COLLECTION]
     cdir = os.path.dirname(__file__)
-    filepath = "static/posts.csv"
+    filepath = "data_files/posts.csv"
     file_res = os.path.join(cdir, filepath)
     try:
-        data = pd.read_csv(file_res, header=None)
+        data = pd.read_csv(file_res, header=0)
     except FileNotFoundError:
         print(f"File {filepath} not found.")
         return
@@ -28,5 +30,8 @@ async def import_data():
     await collection.insert_many(data_json)
 
 
-if __name__ == "__main__":
-    asyncio.run(import_data())
+asyncio.run(import_data())
+
+
+# if __name__ == "__main__":
+#     asyncio.run(import_data())
