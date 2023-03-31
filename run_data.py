@@ -8,7 +8,7 @@ import pandas as pd
 
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from .config import settings
+from app.config import settings
 
 
 async def import_data() -> Any:
@@ -30,8 +30,5 @@ async def import_data() -> Any:
     await collection.insert_many(data_json)
 
 
-asyncio.run(import_data())
-
-
-# if __name__ == "__main__":
-#     asyncio.run(import_data())
+if __name__ == "__main__":
+    asyncio.run(import_data())

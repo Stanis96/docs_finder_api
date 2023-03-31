@@ -4,6 +4,9 @@
 <h1 align="center">Docs finder - for working with documents.</h1>
 
 ### Description:
+This is a FastAPI project with MongoDB that serves as a search engine for documents.
+The application allows users to search for specific documents
+by inputting relevant keywords or phrases.
 
 ### Installation:
 * Clone the repository to a local directory:
@@ -14,6 +17,10 @@
 * Application launch:
 ```sh
   docker-compose -f docker-compose.yaml up --build
+  ```
+* Loading test data into the database:
+```sh
+  python run_data.py
   ```
 
 ### API specification:
