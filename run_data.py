@@ -12,9 +12,9 @@ from app.config import settings
 
 
 async def import_data() -> Any:
-    client = AsyncIOMotorClient(settings.MONGODB_URL)
-    db = client[settings.DB_NAME]
-    collection = db[settings.DB_COLLECTION]
+    client = AsyncIOMotorClient(settings.MONGO_URI)
+    db = client[settings.MONGO_DB]
+    collection = db[settings.MONGO_COLLECTION]
     cdir = os.path.dirname(__file__)
     filepath = "data_files/posts.csv"
     file_res = os.path.join(cdir, filepath)

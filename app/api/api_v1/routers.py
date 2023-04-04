@@ -1,8 +1,8 @@
 from typing import List
 
 from fastapi import APIRouter
-from fastapi import Request
 from fastapi import status
+from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.config import settings
 from app.schemas import Post
@@ -11,15 +11,21 @@ from app.schemas import Post
 router = APIRouter()
 
 
+client = AsyncIOMotorClient("mongodb://mongo_db:27017/mongo_db")
+
+database = client[settings.MONGO_DB]
+
+post_collection = database.get_collection("posts_collection")
+
+
 @router.get(
-    "/show/",
-    response_description="Get 20 matching posts",
+    "/read_all",
+    response_description="Retrieved 20 posts",
     response_model=List[Post],
     status_code=status.HTTP_200_OK,
 )
-async def search_posts(search_terms: str, request: Request):
-    db = request.app.mongodb
-    collection = db[settings.DB_COLLECTION]
-    query = {"$text": {"$search": search_terms}}
-    result = await collection.find(query).limit(20).to_list(length=20)
-    return result
+async def get_all():
+    posts = []
+    async for post in post_collection.find().limit(20):
+        posts.append(post)
+    return posts

@@ -18,9 +18,9 @@ class Settings(BaseSettings):
     PROJECT_VERSION: Optional[str]
     PROJECT_DESCRIPTION: Optional[str]
 
-    MONGODB_URL: Optional[MongoDsn]
-    DB_NAME: str
-    DB_COLLECTION: Optional[str]
+    MONGO_URI: Optional[MongoDsn]
+    MONGO_DB: str
+    MONGO_COLLECTION: Optional[str]
 
     class Config:
         env_file = ".env"
