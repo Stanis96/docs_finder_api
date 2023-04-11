@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     PROJECT_VERSION: Optional[str]
     PROJECT_DESCRIPTION: Optional[str]
 
-    MONGO_URI: Optional[MongoDsn]
+    MONGO_URL: Optional[MongoDsn]
     MONGO_DB: str
     MONGO_COLLECTION: Optional[str]
 

@@ -20,7 +20,7 @@ by inputting relevant keywords or phrases.
   ```
 * Loading test data into the database:
 ```sh
-  python run_data.py
+  python launch_data.py
   ```
 
 ### API specification:
