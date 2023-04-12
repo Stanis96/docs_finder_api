@@ -18,12 +18,10 @@ database = client.get_database("mongo_db")
 post_collection = database.get_collection("posts_collection")
 
 
-async def search_data(key_word: str, search_item: str) -> List:
-    list_data = []
+async def search_data(key_word: str, search_item: str) -> Any:
     query = {f"{key_word}": {"$regex": f"{search_item}"}}
-    async for post in post_collection.find(query):
-        list_data.append(post)
-    return list_data
+    post = await post_collection.find(query).to_list(None)
+    return post
 
 
 @router.get(
@@ -32,10 +30,8 @@ async def search_data(key_word: str, search_item: str) -> List:
     response_model=List[Post],
     status_code=status.HTTP_200_OK,
 )
-async def get_test():
-    posts = []
-    async for post in post_collection.find().limit(20):
-        posts.append(post)
+async def get_test() -> Any:
+    posts = await post_collection.find().limit(20).to_list(None)
     return posts
 
 
