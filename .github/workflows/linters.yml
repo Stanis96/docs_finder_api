@@ -1,31 +1,31 @@
-name: tests
+name: linters
 
 on:
     - push
     - pull_request
 
 jobs:
-  tests:
+  linters:
     runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.11
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
     - name: Install Poetry
       uses: snok/install-poetry@v1
       with:
-        version: 1.3.2
+        version: 1.4.1
         virtualenvs-create: true
         virtualenvs-in-project: true
         installer-parallel: true
 
     - name: Load cached venv
       id: cached-poetry-dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: .venv
         key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
@@ -39,9 +39,6 @@ jobs:
 
     - name: venv activate
       run: source .venv/bin/activate
-
-    - name: Run PyTest
-      run: poetry run pytest
 
     - name: black
       run: poetry run black .
