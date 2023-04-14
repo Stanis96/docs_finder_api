@@ -31,17 +31,9 @@ by inputting relevant keywords or phrases.
 >ReDoc UI:
 > >http://localhost:8000/redoc
 >
-| Router | Description |
-|:-------|:------------|
-|        |             |
-|        |             |
-|        |             |
-|        |             |
-|        |             |
-|        |             |
-|        |             |
-|        |             |
-|        |             |
-|        |             |
-|        |             |
-|        |             |
+| Router                         | Description                             |
+|:-------------------------------|:----------------------------------------|
+| GET/api/v1/retrieve_all        | Retrieve all data                       |
+| GET/api/v1/search_current_page | Returns a specific page with data limit |
+| GET/api/v1/search_text         | Search for posts in text                |
+| GET/api/v1/search_date         | Search posts by date                    |

@@ -2,17 +2,18 @@ from typing import Any
 from typing import List
 
 from fastapi import APIRouter
+from fastapi import HTTPException
 from fastapi import status
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.schemas import Post
+from app.schemas import PostBase
 
 
 router = APIRouter()
 
 
 client: AsyncIOMotorClient = AsyncIOMotorClient("mongodb://mongo_db:27017/mongo_db")
-# client: AsyncIOMotorClient = AsyncIOMotorClient("mongodb://user:pass@mongo_db:27017/mongo_db")
 database = client.get_database("mongo_db")
 
 post_collection = database.get_collection("posts_collection")
@@ -21,17 +22,36 @@ post_collection = database.get_collection("posts_collection")
 async def search_data(key_word: str, search_item: str) -> Any:
     query = {f"{key_word}": {"$regex": f"{search_item}"}}
     post = await post_collection.find(query).to_list(None)
+
+    if not post:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"{search_item} not found!"
+        )
     return post
 
 
 @router.get(
-    "/read_20",
-    response_description="Retrieved 20 test posts",
+    "/retrieve_all",
+    response_description="Retrieve all data",
+    response_model=List[PostBase],
+    status_code=status.HTTP_200_OK,
+)
+async def get_all() -> Any:
+    posts = await post_collection.find().to_list(None)
+    return posts
+
+
+@router.get(
+    "/search_current_page",
+    response_description="Set the number of entries and page number",
     response_model=List[Post],
     status_code=status.HTTP_200_OK,
 )
-async def get_test() -> Any:
-    posts = await post_collection.find().limit(20).to_list(None)
+async def search_page(page_size: int, page_num: int) -> Any:
+    skips = page_size * (page_num - 1)
+    posts = await post_collection.find().skip(skips).limit(page_size).to_list(None)
+    if not posts:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Values not found!")
     return posts
 
 
