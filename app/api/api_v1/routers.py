@@ -2,6 +2,7 @@ from typing import Any
 from typing import List
 
 from fastapi import APIRouter
+from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -13,14 +14,17 @@ from app.schemas import PostBase
 router = APIRouter()
 
 
-client: AsyncIOMotorClient = AsyncIOMotorClient("mongodb://mongo_db:27017/mongo_db")
-database = client.get_database("mongo_db")
+async def get_prod_client() -> AsyncIOMotorClient:
+    client: AsyncIOMotorClient = AsyncIOMotorClient("mongodb://mongo_db:27017/")
+    return client
 
-post_collection = database.get_collection("posts_collection")
 
-
-async def search_data(key_word: str, search_item: str) -> Any:
+async def search_data(
+    key_word: str, search_item: str, client: AsyncIOMotorClient = Depends(get_prod_client)
+) -> Any:
     query = {f"{key_word}": {"$regex": f"{search_item}"}}
+    database = client.get_database("mongo_db")
+    post_collection = database.get_collection("posts_collection")
     post = await post_collection.find(query).to_list(None)
 
     if not post:
@@ -36,7 +40,9 @@ async def search_data(key_word: str, search_item: str) -> Any:
     response_model=List[PostBase],
     status_code=status.HTTP_200_OK,
 )
-async def get_all() -> Any:
+async def get_all(client: AsyncIOMotorClient = Depends(get_prod_client)) -> Any:
+    database = client.get_database("mongo_db")
+    post_collection = database.get_collection("posts_collection")
     posts = await post_collection.find().to_list(None)
     return posts
 
@@ -47,8 +53,12 @@ async def get_all() -> Any:
     response_model=List[Post],
     status_code=status.HTTP_200_OK,
 )
-async def search_page(page_size: int, page_num: int) -> Any:
+async def search_page(
+    page_size: int, page_num: int, client: AsyncIOMotorClient = Depends(get_prod_client)
+) -> Any:
     skips = page_size * (page_num - 1)
+    database = client.get_database("mongo_db")
+    post_collection = database.get_collection("posts_collection")
     posts = await post_collection.find().skip(skips).limit(page_size).to_list(None)
     if not posts:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Values not found!")
@@ -61,8 +71,8 @@ async def search_page(page_size: int, page_num: int) -> Any:
     response_model=List[Post],
     status_code=status.HTTP_200_OK,
 )
-async def search_text_post(word: str) -> Any:
-    return await search_data(key_word="text", search_item=word)
+async def search_text_post(word: str, client: AsyncIOMotorClient = Depends(get_prod_client)) -> Any:
+    return await search_data(key_word="text", search_item=word, client=client)
 
 
 @router.get(
@@ -71,5 +81,7 @@ async def search_text_post(word: str) -> Any:
     response_model=List[Post],
     status_code=status.HTTP_200_OK,
 )
-async def search_post_by_date(date: str) -> Any:
-    return await search_data(key_word="created_date", search_item=date)
+async def search_post_by_date(
+    date: str, client: AsyncIOMotorClient = Depends(get_prod_client)
+) -> Any:
+    return await search_data(key_word="created_date", search_item=date, client=client)

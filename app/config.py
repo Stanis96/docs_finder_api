@@ -1,11 +1,8 @@
 import os
 import sys
 
-from typing import Optional
-
 from dotenv import load_dotenv
 from pydantic import BaseSettings
-from pydantic import MongoDsn
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,13 +11,9 @@ sys.path.append(BASE_DIR)
 
 
 class Settings(BaseSettings):
-    PROJECT_TITLE: Optional[str]
-    PROJECT_VERSION: Optional[str]
-    PROJECT_DESCRIPTION: Optional[str]
-
-    MONGO_URL: Optional[MongoDsn]
+    MONGO_URL: str
     MONGO_DB: str
-    MONGO_COLLECTION: Optional[str]
+    MONGO_COLLECTION: str
 
     class Config:
         env_file = ".env"
